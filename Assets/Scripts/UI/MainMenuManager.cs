@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip buttonClickSound;
 
     public void StartGame()
     {
@@ -15,18 +16,29 @@ public class MainMenuManager : MonoBehaviour
 
     public void SettingMenu()
     {
+        ButtonClickSound();
+
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
 
     public void ReturnMainMenu()
     {
+        ButtonClickSound();
+
         settingsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
 
     public void QuitGame()
     {
+        ButtonClickSound();
+
         Application.Quit();
+    }
+
+    private void ButtonClickSound()
+    {
+        audioSource.PlayOneShot(buttonClickSound);
     }
 }

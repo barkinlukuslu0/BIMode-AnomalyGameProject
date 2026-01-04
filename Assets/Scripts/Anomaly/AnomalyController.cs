@@ -11,9 +11,12 @@ public class AnomalyProp
 
 public class AnomalyController : MonoBehaviour
 {
-    // The list whic include all props in the scene
+    [SerializeField] private GameObject chasingEnemy;
+
+    // The list which include all props in the scene
     public List<AnomalyProp> allProps;
-    [SerializeField] private float anomalySpawnChance;
+    [SerializeField] private float anomalySpawnChance = 50f;
+    [SerializeField] private float enemySpawnChance = 20f;
 
     private bool _isThereAnomaly = false;
 
@@ -30,21 +33,34 @@ public class AnomalyController : MonoBehaviour
         // If chance smaller than spawnChance state continue
         if(chance <= anomalySpawnChance)
         {
-            int index = Random.Range(0, allProps.Count);
+            float enemyChance = Random.Range(0f, 100f);
 
-            //The anomaly spawns at the scene
-            if(allProps[index] != null)
+            if(enemyChance <= enemySpawnChance)
             {
-                allProps[index].normalObject.SetActive(false);
-                allProps[index].anomalyObject.SetActive(true);
+                chasingEnemy.SetActive(true);
+            }
 
-                _isThereAnomaly = true;
+            else
+            {
+                int index = Random.Range(0, allProps.Count);
+
+                //The anomaly spawns at the scene
+                if(allProps[index] != null)
+                {
+                    allProps[index].normalObject.SetActive(false);
+                    allProps[index].anomalyObject.SetActive(true);
+
+                    _isThereAnomaly = true;
+                }
             }
         }
     }
 
     public void ResetAllAnomalies()
     {
+        if(chasingEnemy.gameObject.activeSelf)
+            chasingEnemy.SetActive(false);
+
         foreach (AnomalyProp prop in allProps)
         {
             if(prop.normalObject != null)

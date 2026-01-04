@@ -1,9 +1,17 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AnomalyButton : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private AnomalyController anomalyController;
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip soundEffect;
+
+    [Header("Settings")]
+    [SerializeField] private float actionCoolDown;
 
     private void Awake()
     {
@@ -12,7 +20,16 @@ public class AnomalyButton : MonoBehaviour
     }
 
     public void ButtonPressed()
+    {     
+        StartCoroutine(StartAction());
+    }
+
+    private IEnumerator StartAction()
     {
+        audioSource.PlayOneShot(soundEffect);
+
+        yield return new WaitForSeconds(actionCoolDown);
+
         if(anomalyController.IsThereAnomaly())
         {
             levelManager.NextLevel();

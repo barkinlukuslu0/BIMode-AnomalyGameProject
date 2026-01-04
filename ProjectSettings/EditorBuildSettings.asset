@@ -9,8 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 5b24954858783b44381df3ba1ab34436
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
-    guid: 527fc1ed1662fab41856c6e3feee4be1
+    path: Assets/ToyStore.unity
+    guid: 5c9f2a2bc9cbac343931e3c401ee2400
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 447ca43d0bb189b429901ef2a0be4188
+  - enabled: 1
+    path: Assets/Scenes/DeadScene.unity
+    guid: b0aee7fae6592ff4c875fdfeae5369a1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

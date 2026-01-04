@@ -5,6 +5,10 @@ using TMPro;
 
 public class SettingsMenuManager : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip buttonClickSound;
+    
     [Header("Audio Settings")]
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Slider volumeSlider;
@@ -22,12 +26,16 @@ public class SettingsMenuManager : MonoBehaviour
 
     public void SetFullScreen(bool isFullScreen)
     {
+        ButtonClickSound();
+
         Screen.fullScreen = isFullScreen;
         PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
     }
 
     public void SetQuality(int qualityIndex)
     {
+        ButtonClickSound();
+
         QualitySettings.SetQualityLevel(qualityIndex);
         PlayerPrefs.SetInt("QualityLevel", qualityIndex);
     }
@@ -57,7 +65,9 @@ public class SettingsMenuManager : MonoBehaviour
             QualitySettings.SetQualityLevel(savedQuality);
             
             if (qualityDropdown != null)
-                qualityDropdown.value = savedQuality;
+            {
+                qualityDropdown.SetValueWithoutNotify(savedQuality); 
+            }
         }
 
         if (PlayerPrefs.HasKey("FullScreen"))
@@ -67,7 +77,14 @@ public class SettingsMenuManager : MonoBehaviour
             Screen.fullScreen = isFullScreen;
 
             if (fullscreenToggle != null)
-                fullscreenToggle.isOn = isFullScreen;
+            {
+                fullscreenToggle.SetIsOnWithoutNotify(isFullScreen);
+            }
         }
     }
+
+    private void ButtonClickSound()
+    {
+        audioSource.PlayOneShot(buttonClickSound);
+    } 
 }

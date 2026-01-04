@@ -4,86 +4,74 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] lights;
-
     [Header("UI and References")]
     [SerializeField] private TextMeshPro levelNumberText;
     [SerializeField] private AnomalyController anomalyController;
+    [SerializeField] private LightsController lightsController;
+    [SerializeField] private PPController ppController;
 
     [Header("Settings")]
-    [SerializeField] private int defaultLevelNumber;
-    [SerializeField] private float darkDuration = 1f;
+    [SerializeField] private float darkDuration = 1.5f;
 
-    private int _currentLevelNumber;
+    private int _currentLevelNumber = 0;
     private bool _isChangingLevel = false;
 
     private void Start()
     {
-        _currentLevelNumber = defaultLevelNumber;
+        ppController.ResetPPAmount();
+        _currentLevelNumber = 0;
         UpdateLevelText();
     }
 
     public void NextLevel()
     {
-        if (_isChangingLevel) return;
-
-        StartCoroutine(ChangeLevelState(true));
+        if (!_isChangingLevel) StartCoroutine(ChangeLevelState(true));
     }
 
     public void RestartGame()
     {
-        if (_isChangingLevel) return;
-
-        StartCoroutine(ChangeLevelState(false));
+        if (!_isChangingLevel) StartCoroutine(ChangeLevelState(false));
     }
 
     private IEnumerator ChangeLevelState(bool isNextLevel)
     {
-        _isChangingLevel = true; //Lock the state for player cannot spam to the buttons
-
-        SetLights(false); //turn off the lights
+        _isChangingLevel = true;
+        
+        ppController.SetUpdateStatus(false);
+        lightsController.TurnOffLights();
+        
         yield return new WaitForSeconds(darkDuration);
 
         if (isNextLevel)
         {
-            if(levelNumberText.text == "0")
+            if (_currentLevelNumber >= 8)
             {
-                Debug.Log("YOU WIN");
+                Debug.Log("You WIN!");
             }
             else
             {
-                 _currentLevelNumber -= 1;
+                _currentLevelNumber++;
             }
         }
         else
         {
-            _currentLevelNumber = defaultLevelNumber;
+            _currentLevelNumber = 0;
         }
 
         UpdateLevelText();
 
-        //Chancing level state
         anomalyController.ResetAllAnomalies();
         anomalyController.SetAnomalies();
+    
+        lightsController.StopFlicker(); 
 
-        SetLights(true);
-
-        _isChangingLevel = false; // Unlock the state
-    }
-
-    private void SetLights(bool state)
-    {
-        foreach(GameObject light in lights)
-        {
-            light.SetActive(state);
-        }
+        _isChangingLevel = false;
+        ppController.SetUpdateStatus(true);
     }
 
     private void UpdateLevelText()
     {
-        if(levelNumberText != null)
-        {
+        if (levelNumberText != null)
             levelNumberText.text = _currentLevelNumber.ToString();
-        }
     }
 }
